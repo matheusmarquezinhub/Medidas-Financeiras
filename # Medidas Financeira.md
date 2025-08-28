@@ -1,7 +1,10 @@
-# Medidas Financeira
+# 📊 Medidas DAX para Dashboard Financeiro
+
+
+## 🔄 Controle de Atualização
 
 ### Dashboard Atualizado
-```bash
+```dax
 let
     // Pega o horário UTC atual
     FonteUTC = DateTimeZone.UtcNow(),
@@ -19,86 +22,90 @@ let
     Resultado = Table.RenameColumns(Tabela, {{"Column1", "Reload"}})
 in
     Resultado
-
---- Tabela para apresentar quando o dashboard foi atualizado.
 ```
+**Função:** Tabela para apresentar quando o dashboard foi atualizado.
+
 ---
 
-### *VALOR TOTAL*
+## 💰 Valores Básicos
 
-```bash
+### Valor Total
+```dax
 SUM(fDespesas[Valor])
-
---- Soma o valor total 
 ```
----
-### *VALOR TOTAL ANO ANTERIOR* 
+**Função:** Soma o valor total das despesas.
 
-```bash
+---
+
+## ⏰ Comparações Temporais
+
+### Valor Total Ano Anterior
+```dax
 CALCULATE(
     [Valor Total],
     SAMEPERIODLASTYEAR(dCalendario[Id Data])
 )
-
---- Calcula o valor total no mesmo período do ano anterior.
 ```
----
-### *VALOR TOTAL MES ANTERIOR* 
-```bash
+**Função:** Calcula o valor total no mesmo período do ano anterior.
+
+### Valor Total Mês Anterior
+```dax
 CALCULATE(
     [Valor Total],
-    DATEADD(dCalendario[Id Data],-1,MONTH))
-
---- Calcula o valor total no mês anterior selecionado.
+    DATEADD(dCalendario[Id Data],-1,MONTH)
+)
 ```
+**Função:** Calcula o valor total no mês anterior selecionado.
+
 ---
 
-### *VALOR TOTAL FORMATADO* 
-```bash
+## 🎨 Formatação
+
+### Valor Total Formatado
+```dax
 VAR vFormatado = [Valor Total]
 
 VAR vResultado =
     SWITCH(
-            TRUE(),
-            vFormatado >= 1000000000, FORMAT(vFormatado, "R$ #,0,,,.00 Bi"),
-            vFormatado >= 1000000, FORMAT(vFormatado, "R$ #,0,,.00 Mi"),
-            vFormatado >= 1000, FORMAT(vFormatado, "R$ #,0,.00 K"),
-            FORMAT(vFormatado, "R$ #")
-        )
+        TRUE(),
+        vFormatado >= 1000000000, FORMAT(vFormatado, "R$ #,0,,,.00 Bi"),
+        vFormatado >= 1000000, FORMAT(vFormatado, "R$ #,0,,.00 Mi"),
+        vFormatado >= 1000, FORMAT(vFormatado, "R$ #,0,.00 K"),
+        FORMAT(vFormatado, "R$ #")
+    )
 RETURN
     vResultado
-
---- Formata o valor total em unidades abreviadas: milhares (K), milhões (Mi) e bilhões (Bi).
 ```
----
-### *VARIAÇÂO DO ANO ANTERIOR VS ANO ATUAL*
+**Função:** Formata o valor total em unidades abreviadas: milhares (K), milhões (Mi) e bilhões (Bi).
 
-```bash
+---
+
+## 📈 Variações Percentuais
+
+### Variação do Ano Anterior vs Ano Atual
+```dax
 DIVIDE(
-    [Valor Total]-
-    [Valor Total Ano Anterior],
+    [Valor Total] - [Valor Total Ano Anterior],
     [Valor Total Ano Anterior]
 )
-
---- Calcula a variação percentual entre o valor total do ano atual e do ano anterior.
 ```
----
+**Função:** Calcula a variação percentual entre o valor total do ano atual e do ano anterior.
 
-### *VARIAÇÂO DO MÊS ANTERIOR VS MÊS ATUAL*
-```bash
+### Variação do Mês Anterior vs Mês Atual
+```dax
 DIVIDE(
-    [Valor Total]-
-    [Valor Total Mes Anterior],
+    [Valor Total] - [Valor Total Mes Anterior],
     [Valor Total Mes Anterior]
 )
-
---- Calcula a variação percentual entre o valor total do mês atual e do mês anterior.
 ```
+**Função:** Calcula a variação percentual entre o valor total do mês atual e do mês anterior.
+
 ---
 
-### *TOTAL DO MES ATUAL DINAMICO*
+## 🔄 Medidas Dinâmicas
 
-```bash
+### Total do Mês Atual Dinâmico
+```dax
 VAR DataSelecionada = 
     SELECTEDVALUE(dCalendario[Id Data], MAX(fDespesas[Data])) 
 
@@ -110,24 +117,19 @@ VAR DataReferencia =
     )
 
 RETURN
-
     CALCULATE(
         [TOTAL DESPESAS],
-            FILTER(
+        FILTER(
             ALLSELECTED(dCalendario[Id Data]),
             YEAR(dCalendario[Id Data]) = YEAR(DataReferencia) &&
             MONTH(dCalendario[Id Data]) = MONTH(DataReferencia)
         )
     )
-
---- Retorna o total de despesas do mês atual, considerando a data selecionada no filtro.
---- Ideal para exibir em um cartão (card) dinâmico.
 ```
----
+**Função:** Retorna o total de despesas do mês atual, considerando a data selecionada no filtro. Ideal para cartões dinâmicos.
 
-### *TOTAL DO MES ANTERIOR DINAMICO*
-
-```bash 
+### Total do Mês Anterior Dinâmico
+```dax
 VAR DataSelecionada = 
     SELECTEDVALUE(dCalendario[Id Data], MAX(fDespesas[Data]))
 
@@ -147,15 +149,11 @@ RETURN
             MONTH(dCalendario[Id Data]) = MONTH(DataReferencia)
         )
     )
-
---- Retorna o total de despesas do mês anterior, considerando a data selecionada no filtro.
-
----Ideal para exibir em um cartão (card) dinâmico. 
 ```
----
-### *NOME DO MES ATUAL DINAMICO*
+**Função:** Retorna o total de despesas do mês anterior, considerando a data selecionada no filtro. Ideal para cartões dinâmicos.
 
-```bash
+### Nome do Mês Atual Dinâmico
+```dax
 VAR DataSelecionada = 
     SELECTEDVALUE(dCalendario[Id Data], MAX(fDespesas[Data]))
 
@@ -163,19 +161,16 @@ VAR DataReferencia =
     SWITCH(
         TRUE(),
         DataSelecionada = TODAY(), EOMONTH(TODAY(), -1)+1,
-                EOMONTH(DataSelecionada, -1)+1
+        EOMONTH(DataSelecionada, -1)+1
     )
 
 RETURN 
     FORMAT(DataReferencia, "MMM/yyyy")
-
---- Retorna o nome do mês atual no formato abreviado (ex: "Ago/2024"), baseado na data selecionada. 
-
---- Ideal para exibir em um cartão (card) dinâmico.
 ```
+**Função:** Retorna o nome do mês atual no formato abreviado (ex: "Ago/2024"), baseado na data selecionada. Ideal para cartões dinâmicos.
 
-### *NOME DO MES ANTERIOR DINAMICO*
-```bash
+### Nome do Mês Anterior Dinâmico
+```dax
 VAR DataSelecionada = 
     SELECTEDVALUE(dCalendario[Id Data], MAX(fDespesas[Data]))
 
@@ -188,26 +183,25 @@ VAR DataReferencia =
 
 RETURN 
     FORMAT(DataReferencia, "MMM/yyyy")
-
---- Retorna o nome do mês anterior no formato abreviado (ex: "Jul/2024"), baseado na data selecionada. 
-
---- Ideal para exibir em um cartão (card) dinâmico. 
 ```
+**Função:** Retorna o nome do mês anterior no formato abreviado (ex: "Jul/2024"), baseado na data selecionada. Ideal para cartões dinâmicos.
+
 ---
-### *YTD (Year-to-Date)*
-```bash
+
+## 📅 Análises YTD
+
+### YTD (Year-to-Date)
+```dax
 CALCULATE(
     [TOTAL DESPESAS],
     DATESYTD(dCalendario[Id Data]),
-    dCalendario[Id Data]<=TODAY()
+    dCalendario[Id Data] <= TODAY()
 )
-
---- Calcula o acumulado das despesas desde o início do ano até a data atual.
 ```
----
-### *PYTD (Previous-Year-to-Date)*
+**Função:** Calcula o acumulado das despesas desde o início do ano até a data atual.
 
-```bash
+### PYTD (Previous-Year-to-Date)
+```dax
 CALCULATE(
     [TOTAL DESPESAS],
     DATESYTD(
@@ -215,15 +209,15 @@ CALCULATE(
     ),
     dCalendario[Id Data] <= EOMONTH(TODAY(), -12)
 )
---- Calcula o acumulado das despesas do ano anterior até a mesma data do ano atual. 
-
---- Exemplo: de 01/Jan até 28/Ago do ano anterior.
-
 ```
+**Função:** Calcula o acumulado das despesas do ano anterior até a mesma data do ano atual. Exemplo: de 01/Jan até 28/Ago do ano anterior.
+
 ---
 
-### *MAIOR E MENOR (GASTOS)*
-```bash
+## 🔍 Análises Comparativas
+
+### Maior e Menor (Gastos)
+```dax
 VAR Maior = 
     CALCULATE(
         MAXX(
@@ -258,11 +252,14 @@ RETURN
 "🔧 SEU TEXTO AQUI PARA MAIOR: " & CategoriaMaior & " ( " & FORMAT(Maior, "R$ #,##0") & " )" &
 "  |  💡 SEU TEXTO AQUI PARA MENOR " & CategoriaMenor & " ( " & FORMAT(Menor, "R$ #,##0") & " )"
 ```
----
-### *TOOLTIP MES ATUAL VS MES ANTERIOR + VARIAÇÃO*
+**Função:** Identifica as categorias com maior e menor gastos, exibindo os valores formatados.
 
-```bash
-Tooltip Lucro Mes Atual vs Mes Anterior = 
+---
+
+## 💬 Tooltip Avançado
+
+### Tooltip Mês Atual vs Mês Anterior + Variação
+```dax
 VAR vData = MAX(dCalendario[Id Data])
 VAR vMesAtual = FORMAT(vData, "mmmm")
 
@@ -296,7 +293,7 @@ IF(
         "Resultado: 🆗 Sem variação"
     )
 )
-
---- Medida dedicada para facilitar no tooltip entre mes atual vs mes anterior (gráfico de barras ou linhas)
 ```
+**Função:** Medida dedicada para tooltip comparativo entre mês atual vs mês anterior em gráficos de barras ou linhas.
+
 ---
