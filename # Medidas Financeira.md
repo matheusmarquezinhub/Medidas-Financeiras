@@ -123,7 +123,9 @@ RETURN
         )
     )
 
---- Retorna o total de despesas do mês anterior, considerando a data selecionada no filtro.Ideal para exibir em um cartão (card) dinâmico. 
+--- Retorna o total de despesas do mês anterior, considerando a data selecionada no filtro.
+
+---Ideal para exibir em um cartão (card) dinâmico. 
 ```
 ---
 ### *NOME DO MES ATUAL DINAMICO*
@@ -142,7 +144,9 @@ VAR DataReferencia =
 RETURN 
     FORMAT(DataReferencia, "MMM/yyyy")
 
---- Retorna o nome do mês atual no formato abreviado (ex: "Ago/2024"), baseado na data selecionada. Ideal para exibir em um cartão (card) dinâmico.
+--- Retorna o nome do mês atual no formato abreviado (ex: "Ago/2024"), baseado na data selecionada. 
+
+--- Ideal para exibir em um cartão (card) dinâmico.
 ```
 
 ### *NOME DO MES ANTERIOR DINAMICO*
@@ -160,7 +164,9 @@ VAR DataReferencia =
 RETURN 
     FORMAT(DataReferencia, "MMM/yyyy")
 
---- Retorna o nome do mês anterior no formato abreviado (ex: "Jul/2024"), baseado na data selecionada. Ideal para exibir em um cartão (card) dinâmico. 
+--- Retorna o nome do mês anterior no formato abreviado (ex: "Jul/2024"), baseado na data selecionada. 
+
+--- Ideal para exibir em um cartão (card) dinâmico. 
 ```
 ---
 ### *YTD (Year-to-Date)*
@@ -184,5 +190,10 @@ CALCULATE(
     ),
     dCalendario[Id Data] <= EOMONTH(TODAY(), -12)
 )
---- Calcula o acumulado das despesas do ano anterior até a mesma data do ano atual. Exemplo: de 01/Jan até 28/Ago do ano anterior.
+--- Calcula o acumulado das despesas do ano anterior até a mesma data do ano atual. 
+
+--- Exemplo: de 01/Jan até 28/Ago do ano anterior.
+
+```
 ---
+
