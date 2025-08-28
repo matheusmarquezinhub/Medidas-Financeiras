@@ -1,0 +1,1 @@
+# Medidas Financeiras DAX
