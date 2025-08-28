@@ -12,15 +12,15 @@ Facilitar o desenvolvimento de dashboards financeiros através de medidas DAX pr
 
 📄 **[Ver todas as medidas detalhadas →](https://github.com/matheusmarquezinhub/Medidas-Financeiras/blob/main/%23%20Medidas%20Financeira.md)**
 
-- [Controle de Atualização](#controle-de-atualização)
-- [Valores Básicos](#valores-básicos)
-- [Comparações Temporais](#comparações-temporais)
-- [Formatação](#formatação)
-- [Variações Percentuais](#variações-percentuais)
-- [Medidas Dinâmicas](#medidas-dinâmicas)
-- [Análises YTD](#análises-ytd)
-- [Análises Comparativas](#análises-comparativas)
-- [Tooltip Avançado](#tooltip-avançado)
+- 🔄 Controle de Atualização
+- 💰 Valores Básicos
+- ⏰ Comparações Temporais
+- 🎨 Formatação
+- 📈 Variações Percentuais
+- 🔄 Medidas Dinâmicas
+- 📅 Análises YTD
+- 🔍 Análises Comparativas
+- 💬 Tooltip Avançado
 
 
 ## 🚀 Como Utilizar
