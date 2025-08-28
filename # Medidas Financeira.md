@@ -262,39 +262,38 @@ RETURN
 ### *TOOLTIP MES ATUAL VS MES ANTERIOR + VARIAÇÃO*
 
 ```bash
-VAR vCategoria = SELECTEDVALUE(fSemParar[Carros])
+Tooltip Lucro Mes Atual vs Mes Anterior = 
 VAR vData = MAX(dCalendario[Id Data])
 VAR vMesAtual = FORMAT(vData, "mmmm")
 
-VAR vAtual =
+VAR vLucroAtual =
     CALCULATE(
-        [Total de despesas sem parar],
+        [Lucro],
         KEEPFILTERS(dCalendario)
     )
 
-VAR vAnterior =
+VAR vLucroAnterior =
     CALCULATE(
-        [Total de despesas sem parar],
+        [Lucro],
         DATEADD(dCalendario[Id Data], -1, MONTH)
     )
     
 VAR vMesAnterior = FORMAT(EDATE(vData, -1), "mmmm")
-VAR vDif = vAtual - vAnterior
-VAR vVarPct = DIVIDE(vDif, vAnterior, 0)
+VAR vDif = vLucroAtual - vLucroAnterior
+VAR vVarPct = DIVIDE(vDif, vLucroAnterior, 0)
 
 RETURN
 
-"🚗 Categoria: " & vCategoria & UNICHAR(10) &
-"📅 " & vMesAtual & ": R$ " & FORMAT(vAtual, "0.00") & UNICHAR(10) &
-"📅 " & vMesAnterior & ": R$ " & FORMAT(vAnterior, "0.00") & UNICHAR(10) &
-"〰 Diferença: R$ " & FORMAT(vDif, "+0.00;-0.00") & UNICHAR(10) &
+"📅 " & vMesAtual & ": R$ " & FORMAT(vLucroAtual, "#,0.00") & UNICHAR(10) &
+"📅 " & vMesAnterior & ": R$ " & FORMAT(vLucroAnterior, "#,0.00") & UNICHAR(10) &
+"🚩 Diferença: R$ " & FORMAT(vDif, "+#,0.00;-#,0.00") & UNICHAR(10) &
 IF(
     vDif > 0,
-    "Variação: 🔴 Aumento de " & FORMAT(vVarPct, "0.00%"),
+    "Resultado: 🎯 Aumento de lucro " & FORMAT(vVarPct, "0.00%"),
     IF(
         vDif < 0,
-        "Variação: 🟢 Redução de " & FORMAT(ABS(vVarPct), "0.00%"),
-        "Variação: 🔵 Sem variação"
+        "Resultado: 💸 Redução de lucro " & FORMAT(ABS(vVarPct), "0.00%"),
+        "Resultado: 🆗 Sem variação"
     )
 )
 
