@@ -10,7 +10,7 @@ Facilitar o desenvolvimento de dashboards financeiros através de medidas DAX pr
 
 ## 📋 Índice de Medidas
 
-📄 **[Ver todas as medidas detalhadas →](Medidas%20Financeira.md)**
+📄 **[Ver todas as medidas detalhadas →](https://github.com/matheusmarquezinhub/Medidas-Financeiras/blob/main/%23%20Medidas%20Financeira.md)**
 
 - [Controle de Atualização](#controle-de-atualização)
 - [Valores Básicos](#valores-básicos)
