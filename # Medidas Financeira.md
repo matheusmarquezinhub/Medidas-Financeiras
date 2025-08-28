@@ -5,35 +5,33 @@
 ```bash
 SUM(fDespesas[Valor])
 
---- Somatoria do valor total 
+--- Soma o valor total 
 ```
 ---
 ### *VALOR TOTAL ANO ANTERIOR* 
 
 ```bash
 CALCULATE(
-    [VALOR TOTAL],
+    [Valor Total],
     SAMEPERIODLASTYEAR(dCalendario[Id Data])
 )
 
---- Somatoria do valor total do ano anterior
+--- Calcula o valor total no mesmo período do ano anterior.
 ```
 ---
 ### *VALOR TOTAL MES ANTERIOR* 
 ```bash
-[VALOR TOTAL] = 
 CALCULATE(
-    [TOTAL DESPESAS],
-DATEADD(dCalendario[Id Data],-1,MONTH)
-)
+    [Valor Total],
+    DATEADD(dCalendario[Id Data],-1,MONTH))
 
---- Somatoria do valor total do mês anterior
+--- Calcula o valor total no mês anterior selecionado.
 ```
 ---
 
 ### *VALOR TOTAL FORMATADO* 
 ```bash
-VAR vFormatado = [VALOR TOTAL]
+VAR vFormatado = [Valor Total]
 
 VAR vResultado =
     SWITCH(
@@ -46,13 +44,38 @@ VAR vResultado =
 RETURN
     vResultado
 
---- Aqui temos a formatação dos valores por K,Mi,Bi.
+--- Formata o valor total em unidades abreviadas: milhares (K), milhões (Mi) e bilhões (Bi).
+```
+---
+### *VARIAÇÂO DO ANO ANTERIOR VS ANO ATUAL*
+
+```bash
+DIVIDE(
+    [Valor Total]-
+    [Valor Total Ano Anterior],
+    [Valor Total Ano Anterior]
+)
+
+--- Calcula a variação percentual entre o valor total do ano atual e do ano anterior.
+```
+---
+
+### *VARIAÇÂO DO MÊS ANTERIOR VS MÊS ATUAL*
+```bash
+DIVIDE(
+    [Valor Total]-
+    [Valor Total Mes Anterior],
+    [Valor Total Mes Anterior]
+)
+
+--- Calcula a variação percentual entre o valor total do mês atual e do mês anterior.
 ```
 ---
 
 ### *TOTAL DO MES ATUAL DINAMICO*
 
-```bash VAR DataSelecionada = 
+```bash
+VAR DataSelecionada = 
     SELECTEDVALUE(dCalendario[Id Data], MAX(fDespesas[Data])) 
 
 VAR DataReferencia = 
@@ -73,7 +96,7 @@ RETURN
         )
     )
 
---- Essa medida é para ser inserida em um card e ela irá mostrar o valor total atual.
+--- Retorna o total de despesas do mês atual, considerando a data selecionada no filtro. Ideal para exibir em um cartão (card) dinâmico.
 ```
 ---
 
@@ -92,7 +115,7 @@ VAR DataReferencia =
 
 RETURN
     CALCULATE(
-        [TOTAL DESPESAS],
+        [Valor Total],
         FILTER(
             ALLSELECTED(dCalendario[Id Data]),
             YEAR(dCalendario[Id Data]) = YEAR(DataReferencia) &&
@@ -100,7 +123,7 @@ RETURN
         )
     )
 
---- Essa medida é para ser inserida em um card e ela irá mostrar o valor total do mês anterior. 
+--- Retorna o total de despesas do mês anterior, considerando a data selecionada no filtro.Ideal para exibir em um cartão (card) dinâmico. 
 ```
 ---
 ### *NOME DO MES ATUAL DINAMICO*
@@ -119,7 +142,7 @@ VAR DataReferencia =
 RETURN 
     FORMAT(DataReferencia, "MMM/yyyy")
 
---- Essa medida é para ser inserida em um card e ela irá mostrar o mês atual.
+--- Retorna o nome do mês atual no formato abreviado (ex: "Ago/2024"), baseado na data selecionada. Ideal para exibir em um cartão (card) dinâmico.
 ```
 
 ### *NOME DO MES ANTERIOR DINAMICO*
@@ -137,6 +160,29 @@ VAR DataReferencia =
 RETURN 
     FORMAT(DataReferencia, "MMM/yyyy")
 
---- Essa medida é para ser inserida em um card e ela irá mostrar o mês anterior. 
+--- Retorna o nome do mês anterior no formato abreviado (ex: "Jul/2024"), baseado na data selecionada. Ideal para exibir em um cartão (card) dinâmico. 
 ```
+---
+### *YTD (Year-to-Date)*
+```bash
+CALCULATE(
+    [TOTAL DESPESAS],
+    DATESYTD(dCalendario[Id Data]),
+    dCalendario[Id Data]<=TODAY()
+)
+
+--- Calcula o acumulado das despesas desde o início do ano até a data atual.
+```
+---
+### *PYTD (Previous-Year-to-Date)*
+
+```bash
+CALCULATE(
+    [TOTAL DESPESAS],
+    DATESYTD(
+        DATEADD(dCalendario[Id Data], -1, YEAR)
+    ),
+    dCalendario[Id Data] <= EOMONTH(TODAY(), -12)
+)
+--- Calcula o acumulado das despesas do ano anterior até a mesma data do ano atual. Exemplo: de 01/Jan até 28/Ago do ano anterior.
 ---
